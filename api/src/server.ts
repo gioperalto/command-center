@@ -1,3 +1,4 @@
+import "./datadog/instrumentation.js";
 import express from "express";
 import cors from "cors";
 import statusRouter from "./routes/status.js";

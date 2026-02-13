@@ -103,6 +103,16 @@ export function updateAgent(
       return;
     }
 
+    // Brief standing pause before walking to desk
+    if (!agent.isMoving && agent.idleWanderTimer > 0) {
+      agent.idleWanderTimer -= dt;
+      agent.pose = "standing";
+      if (agent.idleWanderTimer <= 0) {
+        agent.isMoving = true;
+      }
+      return;
+    }
+
     // Need to walk to desk
     const deskPos = getDeskPosition(agent.cubicle, cubiclePositions);
     agent.targetX = deskPos.x;
@@ -156,13 +166,14 @@ export function syncAgentStatus(
   agent.status = newStatus;
 
   if (newStatus === "working") {
-    // Start moving back to desk
+    // Brief pause in standing pose before walking to desk
     const deskPos = getDeskPosition(agent.cubicle, cubiclePositions);
     agent.targetX = deskPos.x;
     agent.targetY = deskPos.y;
     agent.isSitting = false;
-    agent.isMoving = true;
+    agent.isMoving = false;
     agent.pose = "standing";
+    agent.idleWanderTimer = 0.3; // 0.3s pause before moving
   } else {
     // Idle — stand up from desk, will pick wander target next frame
     agent.isSitting = false;

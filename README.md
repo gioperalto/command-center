@@ -9,6 +9,7 @@ command-center/
 ├── api/          Express + TypeScript backend (port 3001)
 │   └── src/
 │       ├── agents/       Agent definitions & simulator
+│       ├── datadog/      dd-trace init & LLM Observability spans
 │       ├── routes/       REST endpoints
 │       ├── store/        In-memory event store
 │       └── server.ts     Entry point
@@ -26,6 +27,7 @@ command-center/
 │       │   ├── pathfinding.ts  Waypoint-based wandering
 │       │   └── constants.ts    Layout dimensions & colors
 │       ├── components/   React UI (OfficeCanvas, EventStream, StatusBar)
+│       ├── datadog/      Browser logging placeholder
 │       ├── hooks/        Polling hooks (useAgentStatus, useEvents)
 │       └── api/          Fetch wrappers
 └── package.json  Root monorepo scripts
@@ -86,8 +88,42 @@ npm run dev
 - The **Event Log** panel on the right shows a scrolling feed of agent activity
 - The **Status Bar** at the bottom shows all agents with live working/idle indicators
 
+## Datadog Integration
+
+The API is instrumented with [dd-trace](https://github.com/DataDog/dd-trace-js) for APM and LLM Observability. Each agent status transition creates a simulated `llm.call` span with tags for agent name, action, model, prompt, and response.
+
+To enable, copy `.env.example` to `.env` and set your `DD_API_KEY`:
+
+```bash
+cp .env.example .env
+# Edit .env and add your Datadog API key
+```
+
+Environment variables:
+
+| Variable | Description |
+|---|---|
+| `DD_API_KEY` | Your Datadog API key |
+| `DD_ENV` | Environment tag (default: `development`) |
+| `DD_SERVICE` | Service name (default: `command-center`) |
+| `DD_LLMOBS_ENABLED` | Enable LLM Observability (`1` to enable) |
+| `DD_LLMOBS_ML_APP` | LLM Observability app name |
+| `DD_LLMOBS_AGENTLESS_ENABLED` | Agentless mode for LLM Observability |
+
+Browser-side Datadog logging (`frontend/src/datadog/browser.ts`) is stubbed out — install `@datadog/browser-logs` and set a client token to enable.
+
+## Visual Details
+
+- CRT-style **monitor scanlines** and random **screen flicker** on cubicle monitors
+- Animated **coffee steam** particles rising from the kitchen coffee machine
+- Working **wall clock** in the Boss Office showing real time
+- **Water cooler** in the corridor
+- Smooth **status transitions** — agents pause briefly before walking to their desk
+- Y-sorted character rendering for proper depth ordering
+
 ## Tech Stack
 
 - **Frontend**: Vite, React 18, TypeScript, HTML5 Canvas (all art via `fillRect`)
 - **Backend**: Express, TypeScript, tsx (dev runner)
+- **Observability**: dd-trace (APM + LLM Observability)
 - **Monorepo**: concurrently for parallel dev servers, Vite proxy for API

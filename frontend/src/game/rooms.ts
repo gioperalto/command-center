@@ -159,6 +159,49 @@ function drawBossOffice(ctx: CanvasRenderingContext2D) {
     ctx.fillRect(bsX + 10 + i * 16, bsY + 36, 10, 12);
   }
 
+  // Wall clock on north wall
+  const clockCX = r.x + r.w - 60;
+  const clockCY = r.y + 22;
+  const clockR = 7;
+  // Clock face (approximate circle with overlapping rects)
+  ctx.fillStyle = "#dddde0";
+  ctx.fillRect(clockCX - clockR, clockCY - clockR * 0.7, clockR * 2, clockR * 1.4);
+  ctx.fillRect(clockCX - clockR * 0.7, clockCY - clockR, clockR * 1.4, clockR * 2);
+  // Clock border
+  ctx.fillStyle = "#444";
+  ctx.fillRect(clockCX - clockR - 1, clockCY - clockR * 0.7 - 1, clockR * 2 + 2, 1);
+  ctx.fillRect(clockCX - clockR - 1, clockCY + clockR * 0.7, clockR * 2 + 2, 1);
+  ctx.fillRect(clockCX - clockR * 0.7 - 1, clockCY - clockR - 1, 1, clockR * 2 + 2);
+  ctx.fillRect(clockCX + clockR * 0.7, clockCY - clockR - 1, 1, clockR * 2 + 2);
+  // Center dot
+  ctx.fillStyle = "#222";
+  ctx.fillRect(clockCX - 1, clockCY - 1, 2, 2);
+  // Clock hands based on real time
+  const clockNow = new Date();
+  const minutes = clockNow.getMinutes();
+  const hours = clockNow.getHours() % 12;
+  // Minute hand (longer)
+  const minAngle = (minutes / 60) * Math.PI * 2 - Math.PI / 2;
+  const minLen = 5;
+  const minEndX = clockCX + Math.round(Math.cos(minAngle) * minLen);
+  const minEndY = clockCY + Math.round(Math.sin(minAngle) * minLen);
+  ctx.fillStyle = "#222";
+  // Draw minute hand as a thin rect from center toward the end
+  const minDx = minEndX - clockCX;
+  const minDy = minEndY - clockCY;
+  for (let t = 0; t <= 1; t += 0.2) {
+    ctx.fillRect(clockCX + Math.round(minDx * t), clockCY + Math.round(minDy * t), 1, 1);
+  }
+  // Hour hand (shorter)
+  const hrAngle = ((hours + minutes / 60) / 12) * Math.PI * 2 - Math.PI / 2;
+  const hrLen = 3;
+  const hrEndX = clockCX + Math.round(Math.cos(hrAngle) * hrLen);
+  const hrEndY = clockCY + Math.round(Math.sin(hrAngle) * hrLen);
+  ctx.fillStyle = "#333";
+  for (let t = 0; t <= 1; t += 0.25) {
+    ctx.fillRect(clockCX + Math.round((hrEndX - clockCX) * t), clockCY + Math.round((hrEndY - clockCY) * t), 1, 1);
+  }
+
   // Small plant in corner
   ctx.fillStyle = "#3a2510";
   ctx.fillRect(r.x + 15, r.y + 140, 14, 12);
@@ -243,6 +286,20 @@ function drawKitchen(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = "#2a1a0a";
   ctx.fillRect(r.x + 33, r.y + 74, 14, 8);
 
+  // Coffee steam particles
+  const steamBaseX = r.x + 40;
+  const steamBaseY = r.y + 54;
+  const now = Date.now();
+  for (let p = 0; p < 3; p++) {
+    const cycle = ((now + p * 600) % 1800) / 1800; // 0..1 repeating
+    const py = steamBaseY - cycle * 20; // float upward
+    const px = steamBaseX + Math.sin((now + p * 500) * 0.004) * 4; // bob left/right
+    const alpha = 0.35 * (1 - cycle); // fade out as it rises
+    ctx.fillStyle = `rgba(200, 200, 220, ${alpha})`;
+    const size = 2 + cycle;
+    ctx.fillRect(px, py, size, size);
+  }
+
   // Sink on counter
   ctx.fillStyle = "#4a4a5a";
   ctx.fillRect(r.x + 100, r.y + 56, 30, 20);
@@ -279,4 +336,23 @@ export function drawRooms(ctx: CanvasRenderingContext2D): void {
   drawConference(ctx);
   drawBossOffice(ctx);
   drawKitchen(ctx);
+
+  // Water cooler in corridor area
+  const wcX = 400;
+  const wcY = 185;
+  // Body (white/light gray)
+  ctx.fillStyle = "#ccccdd";
+  ctx.fillRect(wcX, wcY + 6, 12, 14);
+  // Base
+  ctx.fillStyle = "#8888aa";
+  ctx.fillRect(wcX - 1, wcY + 20, 14, 3);
+  // Water jug on top (blue)
+  ctx.fillStyle = "#4488cc";
+  ctx.fillRect(wcX + 2, wcY, 8, 7);
+  // Jug highlight
+  ctx.fillStyle = "#66aaee";
+  ctx.fillRect(wcX + 3, wcY + 1, 3, 5);
+  // Spout
+  ctx.fillStyle = "#999";
+  ctx.fillRect(wcX + 4, wcY + 13, 4, 2);
 }

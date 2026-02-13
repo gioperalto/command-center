@@ -1,6 +1,7 @@
 import { AgentState, AgentStatus } from "../types.js";
 import { AGENTS } from "./definitions.js";
 import { addEvent } from "../store/events.js";
+import { traceLLMCall } from "../datadog/instrumentation.js";
 
 const agentStates: Map<string, AgentState> = new Map();
 
@@ -46,13 +47,16 @@ export function initSimulator(): void {
   for (const agent of AGENTS) {
     const status: AgentStatus = Math.random() > 0.3 ? "working" : "idle";
     agentStates.set(agent.id, { ...agent, status });
+    const action = status === "working" ? "Started working" : "Going idle";
+    const detail = status === "working" ? pickRandom(WORKING_ACTIONS) : pickRandom(IDLE_ACTIONS);
     addEvent({
       agentId: agent.id,
       agentName: agent.name,
       agentColor: agent.color,
-      action: status === "working" ? "Started working" : "Going idle",
-      detail: status === "working" ? pickRandom(WORKING_ACTIONS) : pickRandom(IDLE_ACTIONS),
+      action,
+      detail,
     });
+    traceLLMCall(agent.name, action, detail);
   }
 
   for (const agent of AGENTS) {
@@ -79,6 +83,7 @@ function scheduleTransition(agentId: string): void {
       action,
       detail,
     });
+    traceLLMCall(state.name, action, detail);
 
     scheduleTransition(agentId);
   }, delay);

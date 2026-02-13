@@ -80,6 +80,18 @@ export function drawCubicles(
     ctx.fillStyle = MONITOR_SCREEN;
     ctx.fillRect(monX + 2, monY + 2, monW - 4, monH - 4);
 
+    // Scanline effect
+    ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+    for (let sy = monY + 2; sy < monY + monH - 2; sy += 3) {
+      ctx.fillRect(monX + 2, sy, monW - 4, 1);
+    }
+
+    // Random flicker overlay (~10% of frames)
+    if (Math.random() < 0.1) {
+      ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.fillRect(monX + 2, monY + 2, monW - 4, monH - 4);
+    }
+
     // Screen glow lines (fake text)
     ctx.fillStyle = "#2a5a8c";
     ctx.fillRect(monX + 4, monY + 5, 16, 1);
