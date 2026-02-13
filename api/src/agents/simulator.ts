@@ -1,7 +1,7 @@
-import { AgentState, AgentStatus } from "../types.js";
-import { AGENTS } from "./definitions.js";
-import { addEvent } from "../store/events.js";
-import { traceLLMCall } from "../datadog/instrumentation.js";
+import { AgentState, AgentStatus } from "../types";
+import { AGENTS } from "./definitions";
+import { addEvent } from "../store/events";
+import { traceLLMCall } from "../datadog/instrumentation";
 
 const agentStates: Map<string, AgentState> = new Map();
 

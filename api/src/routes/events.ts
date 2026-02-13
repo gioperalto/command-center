@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getEvents } from "../store/events.js";
-import { logger } from "../datadog/instrumentation.js";
+import { getEvents } from "../store/events";
+import { logger } from "../datadog/instrumentation";
 
 const router = Router();
 

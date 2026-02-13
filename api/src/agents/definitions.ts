@@ -1,4 +1,4 @@
-import { AgentDefinition } from "../types.js";
+import { AgentDefinition } from "../types";
 
 export const AGENTS: AgentDefinition[] = [
   { id: "researcher", name: "Ada", role: "Researcher", color: "#4a9eff", deskItem: "globe", cubicle: 0 },

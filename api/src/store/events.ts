@@ -1,4 +1,4 @@
-import { EventLogEntry } from "../types.js";
+import { EventLogEntry } from "../types";
 
 const MAX_EVENTS = 500;
 const events: EventLogEntry[] = [];

@@ -17,6 +17,7 @@ export function initDatadogBrowser(): void {
     site: import.meta.env.VITE_DD_SITE || "datadoghq.com",
     service: import.meta.env.VITE_DD_SERVICE || "command-center-frontend",
     env: import.meta.env.VITE_DD_ENV || "development",
+    version: import.meta.env.VITE_DD_VERSION || "1.0.0",
     forwardErrorsToLogs: true,
     sessionSampleRate: 100,
   });

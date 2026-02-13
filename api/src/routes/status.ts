@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getAllAgentStates } from "../agents/simulator.js";
-import { logger } from "../datadog/instrumentation.js";
+import { getAllAgentStates } from "../agents/simulator";
+import { logger } from "../datadog/instrumentation";
 
 const router = Router();
 

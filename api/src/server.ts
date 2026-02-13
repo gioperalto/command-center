@@ -1,10 +1,10 @@
-import "./datadog/instrumentation.js";
+import "./datadog/tracer";
 import express from "express";
 import cors from "cors";
-import statusRouter from "./routes/status.js";
-import eventsRouter from "./routes/events.js";
-import { initSimulator } from "./agents/simulator.js";
-import { logger } from "./datadog/instrumentation.js";
+import statusRouter from "./routes/status";
+import eventsRouter from "./routes/events";
+import { initSimulator } from "./agents/simulator";
+import { logger } from "./datadog/instrumentation";
 
 const app = express();
 const PORT = 3001;

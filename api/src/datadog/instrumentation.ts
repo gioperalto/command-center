@@ -1,13 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
-
-import tracer from "dd-trace";
-
-tracer.init({
-  service: process.env.DD_SERVICE || "command-center",
-  env: process.env.DD_ENV || "development",
-  logInjection: true,
-});
+import tracer from "./tracer";
 
 /**
  * Extract trace context from the active span and return a prefix string
@@ -54,5 +47,3 @@ export function traceLLMCall(agentName: string, action: string, detail: string):
     span.finish();
   }, latency);
 }
-
-export default tracer;
