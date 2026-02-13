@@ -1,0 +1,12 @@
+{
+  "name": "command-center",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --names api,frontend -c blue,green \"npm run dev --prefix api\" \"npm run dev --prefix frontend\"",
+    "install:all": "cd api && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
